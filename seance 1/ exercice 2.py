@@ -6,7 +6,7 @@ print("chemin du dossier courant:" + chemin_courant)
 nom_dir_courant = os.path.basename(chemin_courant)
 print("nom du répertoire courant:" + nom_dir_courant)
 
-nouveau_nom_dir= "new_directory"
+nouveau_nom_dir= "nouveau_repertoire"
 os.makedirs(nouveau_nom_dir)
 print("Créer un répertoire :" + nouveau_nom_dir)
 
