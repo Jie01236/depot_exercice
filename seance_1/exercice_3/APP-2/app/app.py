@@ -1,5 +1,4 @@
-from app import app, version
+from flask import Flask
 
-if __name__ == "__main__":
-    print("Version:" + version)
-    app.run()
+app = Flask(__name__)
+version = "0.0.1"
