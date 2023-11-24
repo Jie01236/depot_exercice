@@ -13,6 +13,5 @@ print("Créer un répertoire :" + nouveau_nom_dir)
 os.rmdir(nouveau_nom_dir)
 print("Supprimer le répertoire:" + nouveau_nom_dir)
 
-# 列出当前目录中的文件和文件夹
 lister = os.listdir(chemin_courant)
 print("Lister les fichiers et les dossiers" + str(lister))
