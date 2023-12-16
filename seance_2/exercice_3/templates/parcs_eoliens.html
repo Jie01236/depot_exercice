@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Parcs Éoliens</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>Identifiant</th>
+            <th>Nom de la région</th>
+            <th>Nom du département</th>
+            <th>Code du département</th>
+            <th>Nom de la commune</th>
+            <th>Nom de l'EPCI en charge</th>
+            <th>Date des données</th>
+            <th>Longitude</th>
+            <th>Latitude</th>
+        </tr>
+        {% for item in data %}
+        <tr>
+            <td>{{ item.recordid }}</td>
+            <td>{{ item.fields.nom_reg }}</td>
+            <td>{{ item.fields.nom_dept }}</td>
+            <td>{{ item.fields.f_code_insee_pdl }}</td>
+            <td>{{ item.fields.f_commune_pdl }}</td>
+            <td>{{ item.fields.libepci }}</td>
+            <td>{{ item.fields.date_des_donnees }}</td>
+            <td>{{ item.geometry.coordinates[1] }}</td>
+            <td>{{ item.geometry.coordinates[0] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
