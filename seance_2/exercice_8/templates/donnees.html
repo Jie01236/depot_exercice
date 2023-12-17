@@ -1,0 +1,39 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}permis de conduire{% endblock %}
+
+{% block content %}
+    <h1>Bienvenue sur l'application du permis de conduire de 2012!</h1>
+    {% if data.empty %}
+        <p>Pas de données</p>
+    {% else %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Libellé complet</th>
+                    <th scope="col">Code postal</th>
+                    <th scope="col">Ville</th>
+                    <th scope="col">Adresse</th>
+                    <th scope="col">Nom de l'auto-école</th>
+                    <th scope="col">Nombre de candidats</th>
+                    <th scope="col">Réussite(%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in data %}
+                    <tr>
+                        <th scope="row">{{ loop.index }}</th>
+                        <td>{{ item['localité auto école'] }}</td>
+                        <td>{{ item.Code_postal }}</td>
+                        <td>{{ item.Ville }}</td>
+                        <td>{{ item.Adresse }}</td>
+                        <td>{{ item.Nom_ecole }}</td>
+                        <td>{{ item['candidats permis b'] }}</td>
+                        <td>{{ item['% réussite permis B'] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

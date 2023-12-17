@@ -1,0 +1,37 @@
+{% extends "conteneur.html" %}
+
+{% block body %}
+<div class="container">
+    <h1>Bienvenue sur l'application du Factbook!</h1>
+    <p>Voici le lien vers le site officiel : <a href="https://www.cia.gov/the-world-factbook/">https://www.cia.gov/the-world-factbook/</a></p>
+    <button onclick="showAlert()">BIENVENUE</button>
+    <script>
+        function showAlert() {
+            alert("Bienvenue");
+        }
+    </script>
+
+    {% if pays %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Capitale</th>
+                <th scope="col">Continent</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pays in pays %}
+            <tr>
+                <th scope="row">{{ loop.index }}</th>
+                <td>{{ pays.nom }}</td>
+                <td>{{ pays.capital }}</td>
+                <td>{{ pays.continent }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endblock %}
