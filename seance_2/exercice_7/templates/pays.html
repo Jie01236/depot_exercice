@@ -1,0 +1,29 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}Factbook{% endblock %}
+
+{% block content %}
+        <h1>Bienvenue sur l'application du Factbook!</h1>
+
+    {% if pays %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Capitale</th>
+                <th scope="col">Continent</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pays in pays %}
+            <tr>
+                <th scope="row">{{loop.index}}</th>
+                <td>{{pays.nom}}</td>
+                <td>{{pays.capital}}</td>
+                <td>{{pays.continent}}</td>
+            </tr>{% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+{% endblock %}
