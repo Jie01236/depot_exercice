@@ -37,7 +37,7 @@ def nom_ecole(libelle):
     return None
 
 @app.route('/donnees/<int:offset>/<int:length>')
-def donnees(offset, length):
+def donnees(offset=0, length=10):
     df = pd.read_csv("https://www.data.gouv.fr/storage/f/2014-05-06T19-39-42/auto-ecole-resultats.csv", 
         encoding = "ISO-8859-1",  
         sep = ",",
@@ -50,13 +50,14 @@ def donnees(offset, length):
     df['Adresse'] = df['localité auto école'].apply(adresse)
     df['Nom_ecole'] = df['localité auto école'].apply(nom_ecole)
     
+    total = len(df)
    # 计算结束索引
     end_index = offset + length
 
     # 使用 iloc 进行分页
     donnees = json.loads(df.iloc[offset:end_index].to_json(orient="records"))
     
-    return render_template('donnees.html', data=donnees)
+    return render_template('donnees.html', data=donnees, offset=offset, length=length, total=total)
     
 
 if __name__ == '__main__':

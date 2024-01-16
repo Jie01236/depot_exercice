@@ -4,6 +4,16 @@
 
 {% block content %}
     <h1>Bienvenue sur l'application du permis de conduire de 2012!</h1>
+    
+    <div class="pagination-buttons">
+        {% if offset > 0 %}
+        <a href="{{ url_for('donnees', offset=(offset-length if offset-length > 0 else 0), length=length) }}" class="btn btn-primary">Voir les résultats précédents</a>
+        {% endif %}
+        {% if offset + length < total %}
+            <a href="{{ url_for('donnees', offset=offset+length, length=length) }}" class="btn btn-primary">Voir les résultats suivants</a>
+        {% endif %}
+    </div>
+
     {% if data.empty %}
         <p>Pas de données</p>
     {% else %}
