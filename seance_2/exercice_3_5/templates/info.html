@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Detail du Parc</title>
+</head>
+<body>
+    <h1>Details du Parc</h1>
+    <table>
+        <tr>
+            <td>Identifiant</td>
+            <td>{{ info.recordid }}</td>
+        </tr>
+        <tr>
+            <td>Nom de la région</td>
+            <td>{{ info.fields.nom_reg }}</td>
+        </tr>
+        <tr>
+            <td>Nom du département</td>
+            <td>{{ info.fields.nom_dept }}</td>
+        </tr>
+        <tr>
+            <td>Code du département</td>
+            <td>{{ info.fields.f_code_insee_pdl }}</td>
+        </tr>
+        <tr>
+            <td>Nom de la commune</td>
+            <td>{{ info.fields.f_commune_pdl }}</td>
+        </tr>
+        <tr>
+            <td>Nom de l'EPCI en charge</td>
+            <td>{{ info.fields.libepci }}</td>
+        </tr>
+        <tr>
+            <td>Date des données</td>
+            <td>{{ info.fields.date_des_donnees }}</td>
+        </tr>
+        <tr>
+            <td>Longitude</td>
+            <td>{{ info.geometry.coordinates[1] }}</td>
+        </tr>
+        <tr>
+            <td>Latitude</td>
+            <td>{{ info.geometry.coordinates[0] }}</td>
+        </tr>
+    </table>
+</body>
+</html>

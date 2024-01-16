@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
-@app.route('/retrieve_wikidata/<identifier>', methods=['GET'])
+@app.route('/retrieve_wikidata/<identifiant>', methods=['GET'])
 def retrieve_wikidata(identifiant):
     if identifiant:
         url = f'https://www.wikidata.org/wiki/{identifiant}'

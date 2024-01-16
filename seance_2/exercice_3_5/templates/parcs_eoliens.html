@@ -20,7 +20,7 @@
         </tr>
         {% for item in data %}
         <tr>
-            <td>{{ item.recordid }}</td>
+            <td><a href="{{ url_for('info', identifiant=item.recordid) }}">{{ item.recordid }}</a></td>
             <td>{{ item.fields.nom_reg }}</td>
             <td>{{ item.fields.nom_dept }}</td>
             <td>{{ item.fields.f_code_insee_pdl }}</td>
