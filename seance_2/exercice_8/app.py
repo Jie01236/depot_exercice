@@ -2,6 +2,7 @@ from flask import Flask, render_template
 import pandas as pd
 import re
 from flask_bootstrap import Bootstrap
+import json
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
@@ -35,22 +36,28 @@ def nom_ecole(libelle):
         return nom_ecole
     return None
 
-df = pd.read_csv('auto-ecole-resultats.csv', encoding='ISO-8859-1')
-print(df.head()) 
-
 @app.route('/donnees/<int:offset>/<int:length>')
 def donnees(offset, length):
-    end_index = offset + length
+    df = pd.read_csv("https://www.data.gouv.fr/storage/f/2014-05-06T19-39-42/auto-ecole-resultats.csv", 
+        encoding = "ISO-8859-1",  
+        sep = ",",
+        header = 0)
+      
+    df.drop(df.columns[[1, 2, 5]], axis=1, inplace = True)
 
     df['Code_postal'] = df['localité auto école'].apply(postal_code)
     df['Ville'] = df['localité auto école'].apply(ville)
     df['Adresse'] = df['localité auto école'].apply(adresse)
     df['Nom_ecole'] = df['localité auto école'].apply(nom_ecole)
-
-    data = df[offset:end_index]
-    print(data)
     
-    return render_template('donnees.html', data=data)
+   # 计算结束索引
+    end_index = offset + length
+
+    # 使用 iloc 进行分页
+    donnees = json.loads(df.iloc[offset:end_index].to_json(orient="records"))
+    
+    return render_template('donnees.html', data=donnees)
+    
 
 if __name__ == '__main__':
     app.run(debug=True)

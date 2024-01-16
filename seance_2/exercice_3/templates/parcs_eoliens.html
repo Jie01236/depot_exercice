@@ -5,6 +5,7 @@
     <title>Parcs Éoliens</title>
 </head>
 <body>
+    {% if data %}
     <table>
         <tr>
             <th>Identifiant</th>
@@ -31,5 +32,6 @@
         </tr>
         {% endfor %}
     </table>
+    {% endif %}
 </body>
 </html>
