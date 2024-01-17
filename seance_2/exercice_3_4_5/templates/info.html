@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Detail du Parc</title>
-</head>
-<body>
+{% extends 'exemplaire.html' %}
+
+{% block title %}Detail du Parc{% endblock %}
+
+{% block body %}
     <h1>Details du Parc</h1>
     <table>
         <tr>
@@ -44,5 +42,4 @@
             <td>{{ info.geometry.coordinates[0] }}</td>
         </tr>
     </table>
-</body>
-</html>
+{% endblock %}
