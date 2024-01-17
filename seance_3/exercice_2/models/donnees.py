@@ -3,55 +3,87 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_name = db.Column(db.VARCHAR(45), unique=True, nullable=False)
-    user_surname = db.Column(db.VARCHAR(45), nullable=False)
-    user_email = db.Column(db.VARCHAR(45), unique=True, nullable=False)
-    user_password_hash = db.Column(db.TEXT, nullable=False)
-    # 其他字段...
-    user_inscription_date = db.Column(db.DATETIME, default=datetime.utcnow)
+skill = db.Table("skill",
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('competence_id', db.Integer, db.ForeignKey('competences.id'), primary_key=True))
 
-    # 定义与 Post 的关系
-    posts = db.relationship('Post', backref='author', lazy=True)
-    # 定义与 Comment 的关系
-    comments = db.relationship('Comment', backref='author', lazy=True)
-    # ...其他关系
+followers = db.Table('followers',
+    db.Column('follower_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('followed_id', db.Integer, db.ForeignKey('user.id'), primary_key=True))
+
+class User(db.Model):
+    __tablename__ = 'user'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(45), unique=True, nullable=False)
+    firstname = db.Column(db.String(45), unique=True, nullable=False)
+    surname = db.Column(db.String(45), nullable=False)
+    mail = db.Column(db.String(45), unique=True, nullable=False)
+    password_hash = db.Column(db.TEXT, nullable=False)
+    birthyear = db.Column(db.Integer, nullable=False)
+    description = db.Column(db.TEXT, nullable=False)
+    last_seen = db.Column(db.DateTime)
+    linkedin = db.Column(db.TEXT, nullable=False)
+    github = db.Column(db.TEXT, nullable=False)
+    inscription_date = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    competences = db.relationship('Competences', secondary=skill, backref="users")
+
+    followed = db.relationship('User',
+                               secondary=followers,
+                               primaryjoin=(followers.c.follower_id == id),
+                               secondaryjoin=(followers.c.followed_id == id),
+                               backref=db.backref('followers', lazy='dynamic'))
+
+class Competences(db.Model):
+    __tablename__ = 'competences'
+    id = db.Column(db.Integer, primary_key=True)
+    label = db.Column(db.String(45), nullable=False)
 
 class Post(db.Model):
     __tablename__ = 'post'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(45))
-    # 其他字段...
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    user = db.relationship('User', back_populates='posts')
+    message = db.Column(db.Text)
+    date = db.Column(db.DateTime)
+    indexation = db.Column(db.String(45))
+    html = db.Column(db.Text)
+    auteur_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-User.posts = db.relationship('Post', order_by=Post.id, back_populates='user')
+    r_user = db.relationship('User', backref='posts', lazy=True) 
 
 class Comment(db.Model):
     __tablename__ = 'comment'
     id = db.Column(db.Integer, primary_key=True)
-    # 其他字段...
+    message = db.Column(db.Text)
+    date = db.Column(db.DateTime)
+    html = db.Column(db.Text)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    auteur_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    r_post = db.relationship('Post', backref='comments', lazy=True)
+    r_user = db.relationship('User', backref='comments', lazy=True) 
 
 class Message(db.Model):
     __tablename__ = 'message'
     id = db.Column(db.Integer, primary_key=True)
-    # 其他字段...
+    message = db.Column(db.Text)
+    html = db.Column(db.Text)
+    date = db.Column(db.DateTime)
+    expediteur_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    destinaire_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    r_user = db.relationship('User', foreign_keys=[expediteur_id], backref='messages_e', lazy=True)
+    r_user_2 = db.relationship('User', foreign_keys=[destinaire_id], backref='messages_d', lazy=True) 
 
 class CV(db.Model):
     __tablename__ = 'cv'
     id = db.Column(db.Integer, primary_key=True)
-    # 其他字段...
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    nom_poste = db.Column(db.Text)
+    nom_emloyeur = db.Column(db.Text)
+    ville = db.Column(db.String(45))
+    annee_debut = db.Column(db.Integer, nullable=False)
+    annee_fin = db.Column(db.Integer, nullable=False)
+    description_poste = db.Column(db.Text)
+    utilisateur_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-class Competence(db.Model):
-    __tablename__ = 'competence'
-    id = db.Column(db.Integer, primary_key=True)
-    # 其他字段...
-
-class Skill(db.Model):
-    __tablename__ = 'skill'
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
-    competence_id = db.Column(db.Integer, db.ForeignKey('competence.id'), primary_key=True)
+    r_user = db.relationship('User', backref='cvs', lazy=True) 
