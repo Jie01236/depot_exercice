@@ -1,0 +1,27 @@
+{% extends "partials/conteneur.html" %}
+
+{% from "macros.html" import pagination_macro_with_param with context %}
+
+{% block body %}
+
+<div class="container">
+    <h1>Bienvenue sur l'application du Factbook!</h1>
+    <p>Voici le lien vers le site officiel : <a
+            href="https://www.cia.gov/the-world-factbook/">https://www.cia.gov/the-world-factbook/</a></p>
+
+    {{ pagination_macro_with_param('resources', pays, pagination.page) }}
+
+    {%if pagination%}
+    <p>Ressources de {{pays}}</p>
+    <ul>
+    {%for resource in pagination.items%}
+        <li>{{resource.name}}</li>
+    {%endfor%}
+</ul>
+    {%endif%}
+</div>
+
+{{ pagination_macro_with_param('resources', pays, pagination.page) }}
+
+
+{% endblock %}

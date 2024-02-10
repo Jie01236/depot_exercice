@@ -3,57 +3,23 @@ from flask import render_template
 from ..models.factbook import Country, Map, Resources
 from sqlalchemy import or_
 from sqlalchemy import distinct
-
+#---------------------------------------------- CORRECTION  3 et 5 -------------------------------------------------------------------------
 @app.route("/pays")
-def pays():
-    donnees = []
-    for country in Country.query.all():
-        donnees.append({
-            "nom": country.name,
-            "capitale":"inconnu",
-            "continent":"inconnu"
-        })
-    
-    return render_template("pages/tous_pays.html", donnees=donnees, sous_titre="Tous les pays")
+@app.route("/pays/<int:page>")
+def pays(page=1):
+    return render_template("pages/pays.html", 
+        sous_titre="Pays", 
+        donnees= Country.query.order_by(Country.name).paginate(page=page, per_page=app.config["PAYS_PER_PAGE"]))
 
-@app.route("/pays/<string:nom>")
-def pays_specifique(nom):
-    grandes_villes = []
-    if nom =='France':
-        grandes_villes = ['Paris', 'Lyon', 'Marseille']
-    return render_template("pages/pays.html", pays=nom, grandes_villes=grandes_villes, sous_titre=nom)
-
-@app.route("/tous_pays")
-def tous_pays():
-    resultats = Country.query.all()
-    return render_template("pages/generique.html", donnees=resultats)
-
-@app.route("/le_premier_pays")
-def le_premier_pays():
-    resultats = list(Country.query.first())
-    return render_template("pages/generique.html", donnees=resultats)
-
-@app.route("/pays_differents_de_souverain")
-def pays_differents_de_souverain():
-    resultats = Country.query.filter(Country.type != 'sovereign').all()
-    return render_template("pages/generique.html", donnees=resultats)
-
-@app.route("/condition_or_autre_condition")
-def condition_or_autre_condition():
-    resultats = Country.query.filter(or_(Country.type == 'sovereign', Country.id == 'ay')).all()
-    return render_template("pages/generique.html", donnees=resultats)
-
-@app.route("/pays_souverains_ranges_ordre_decroissant")
-def pays_souverains_ranges_ordre_decroissant():
-    resultats = Country\
-        .query.filter(
-            or_(
-                Country.type == 'sovereign', 
-                Country.type == 'other')
-            )\
-        .order_by(Country.id.desc())\
-        .all()
-    return render_template("pages/generique.html", donnees=resultats)
+#确保有一个名为un_pays的路由在您的Flask应用中定义，并且这个路由接受一个参数nom_pays
+#否则En tentant de cliquer sur le lien http://localhost:5000/continents/Africa, 
+#il y a une erreur « werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'un_pays' with values ['nom_pays']. Did you mean 'tous_pays' instead? » 
+#la route manque en effet dans generales.py
+@app.route("/pays/<string:nom_pays>")
+def un_pays(nom_pays):
+    return render_template("pages/un_pays.html", 
+        sous_titre=nom_pays, 
+        donnees= Country.query.filter(Country.name == nom_pays).first())
 
 #---------------------------------------------- EXERCICE 3 et 5 -------------------------------------------------------------------------
 
@@ -73,10 +39,14 @@ def continents(page=1):
         for continent in pays.maps:
             # si la clé (continent) existe déjà dans le dictionnaire, alors il est simplement nécessaire 
             # d'ajouter le pays s'il n'est pas déjà présent
-            if pays.name not in pays_par_continent[continent.name]:
-                pays_par_continent[continent.name].append(pays.name)
-                pays_count_par_continent[continent.name] = pays_count_par_continent.get(continent.name, 0) + 1
-            # sinon il faut créer la clé et initialiser la valeur
+#--- CORRECTION -----------------------------------------------------------------------------------
+            if continent.name in pays_par_continent:
+            #Effectuer directement « if pays.name not in pays_par_continent[continent.name] » ne peut pas fonctionner 
+            #lors de la première itération sur chaque continent : Il faur verifier la présence de continent.name dans le dictionnaire
+                if pays.name not in pays_par_continent[continent.name]:
+                    pays_par_continent[continent.name].append(pays.name)
+                    pays_count_par_continent[continent.name] = pays_count_par_continent.get(continent.name, 0) + 1
+                # sinon il faut créer la clé et initialiser la valeur
             else:
                 pays_par_continent[continent.name] = [pays.name]
                 pays_count_par_continent[continent.name] = 1
