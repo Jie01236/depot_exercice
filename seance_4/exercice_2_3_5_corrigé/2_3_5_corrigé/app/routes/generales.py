@@ -107,10 +107,24 @@ def ressources(nom):
 
 #----------------------------------------------- EXERCICE 2 -----------------------------------------------------------------------
 #exercice_2 pour seance_4
-@app.route("/resources/<string:nom_pays>/<int:page>")
+
+# faut!
+# le paramètre ressources renvoyé au template est l’ensemble des results, qui sont des Country et non des Ressources : 
+# la requête SQLAlchemy effectuée part en effet de Country et sélectionne les Country qui ont France pour name : 
+# il y a donc un seul résultat qui remonte, c’est <Country France>.
+'''@app.route("/resources/<string:nom_pays>/<int:page>")
 def ressources_par_pays(nom_pays, page=1):
     page_size = 10  
     query = Country.query.filter(Country.name == nom_pays)
+    results = query.paginate(page=page, per_page=page_size)
+
+    return render_template("pages/pays_ressources.html", pays=nom_pays, ressources=results, sous_titre=nom_pays)'''
+
+#---------------------------------------------- CORRECTION 2 -----
+@app.route("/resources/<string:nom_pays>/<int:page>")
+def ressources_par_pays(nom_pays, page=1):
+    page_size = 10
+    query = db.session.query(Resources).join(Country.resources).filter(Country.name == nom_pays)
     results = query.paginate(page=page, per_page=page_size)
 
     return render_template("pages/pays_ressources.html", pays=nom_pays, ressources=results, sous_titre=nom_pays)

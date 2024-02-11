@@ -9,9 +9,9 @@
         <p>Vous avez choisi d'afficher les données du pays suivant: {{pays}}</p>
         
         <h2>Les ressources de {{pays}}</h2>
-        {%if ressources %}
+        {%if ressources.items %}
         <ul>
-            {%for resource in ressources.resources %}
+            {%for resource in ressources.items %}
             <li>{{resource.name}}</li>
             {%endfor%}
         </ul>
