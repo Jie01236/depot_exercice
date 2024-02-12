@@ -1,0 +1,17 @@
+<form action="{{url_for('insertion_pays')}}" method="post" name="insertion_pays">
+    {{ form.hidden_tag() }}
+
+    <div class="form-group">
+        <label for="nom_ressource">Nom de la ressource </label>
+        {{ form.nom_ressource(class_="form-control", placeholder_="Ressource") }}
+        <small id="nom_ressource" class="form-text text-muted">Entrer le nom de la ressource</small>
+    </div>
+
+    <div class="form-group">
+        <label for="code_ressource">Code de la ressource </label>
+        {{ form.code_ressource(class_="form-control", placeholder_="Code") }}
+        <small id="code_ressource" class="form-text text-muted">Entrer le code de la ressource</small>
+    </div>
+
+    <p><input type="submit" value="Insérer"></p>
+</form>

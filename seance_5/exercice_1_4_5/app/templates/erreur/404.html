@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ sous_titre }}</title>
+</head>
+<body>
+    <h1>404 - Page non trouvée</h1>
+    <p>Il semble que cette page n'existe pas.</p>
+    <img src="{{ url_for('static', filename='404.gif') }}" alt="Image d'erreur">
+    <p><a href="{{ url_for('pays') }}">Retour à l'accueil</a></p>
+</body>
+</html>
